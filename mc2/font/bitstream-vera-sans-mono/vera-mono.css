@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'Bitstream Vera Sans Mono';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Bitstream Vera Sans Mono'), local('BitstreamVeraSansMono-Regular'),
+         url('VeraMono-webfont.woff') format('woff'),
+         url('VeraMono-webfont.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Bitstream Vera Sans Mono';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Bitstream Vera Sans Mono Italic'), local('BitstreamVeraSansMono-Italic'),
+         url('VeraMono-Italic-webfont.woff') format('woff'),
+         url('VeraMono-Italic-webfont.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Bitstream Vera Sans Mono';
+    font-style: italic;
+    font-weight: 700;
+    src: local('Bitstream Vera Sans Mono BoldItalic'), local('BitstreamVeraSansMono-BoldItalic'),
+         url('VeraMono-Bold-Italic-webfont.woff') format('woff'),
+         url('VeraMono-Bold-Italic-webfont.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Bitstream Vera Sans Mono';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Bitstream Vera Sans Mono Bold'), local('BitstreamVeraSansMono-Bold'),
+         url('VeraMono-Bold-webfont.woff') format('woff'),
+         url('VeraMono-Bold-webfont.ttf') format('truetype');
+}
+

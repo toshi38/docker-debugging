@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>The three stages</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/styles.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 3 of 3 </div>
+            <h1>The three stages</h1>
+            
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/2">Stage&nbsp;1</a></li>
+<li><a href="#/3">Stage&nbsp;2</a></li>
+<li><a href="#/4">Stage&nbsp;3</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/3</div>
+      <h3>Stage 1</h3>
+      <p>Docker logging</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-1-1">
+<span class="pos">3-1-1</span>
+<div class="slidecontent"><h3 id="modifying-our-source">Modifying our source</h3>
+<p><pre><code><span class="hljs-keyword">let</span> uuidToGuess;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resetUuid</span>(<span class="hljs-params"></span>) </span>{
+  uuidToGuess = uuid();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`uuid to guess: <span class="hljs-subst">${uuidToGuess}</span>`</span>);
+}</code></pre></p>
+</div></section><section class="slide" data-pos="3-1-2">
+<span class="pos">3-1-2</span>
+<div class="slidecontent"><h3 id="building-our-image">Building our image</h3>
+<p><pre><code>$ docker build . -t game:s1
+Sending build context to Docker daemon  12.85MB
+Step 1/7 : FROM node:8
+
+<span class="hljs-comment">#... truncated</span>
+
+Removing intermediate container 0c8b21542167
+Successfully built 455d9c957892
+Successfully tagged game:s1
+</code></pre></p>
+</div></section><section class="slide" data-pos="3-1-3">
+<span class="pos">3-1-3</span>
+<div class="slidecontent"><h3 id="running-our-container">Running our container</h3>
+<p><pre><code>$ docker run -d -p8080:8080 game:s1
+11e228cfbf32c68a20735bb4d719b956591b6e7bb77b78b212dff33f619191de
+</code></pre></p>
+</div></section><section class="slide" data-pos="3-1-4">
+<span class="pos">3-1-4</span>
+<div class="slidecontent"><h3 id="getting-our-logs">Getting our logs</h3>
+<p><pre><code>$ docker logs 11e228c
+uuid to guess: 55c8f651-0181-40f7-b6a8-07dea150c86f
+Server running on port 8080
+</code></pre></p>
+</div></section><section class="slide" data-pos="3-1-5">
+<span class="pos">3-1-5</span>
+<div class="slidecontent"><h3 id="demo">Demo</h3>
+<p><strong>Winning with logs</strong></p>
+</div></section><section class="slide" data-pos="3-1-6">
+<span class="pos">3-1-6</span>
+<div class="slidecontent"><h3 id="pros-">Pros:</h3>
+<ul>
+<li>Fine for simple examples</li>
+<li>Simple to work with</li>
+<li>Can go back and audit logs</li>
+</ul>
+</div></section><section class="slide" data-pos="3-1-7">
+<span class="pos">3-1-7</span>
+<div class="slidecontent"><h3 id="cons-">Cons:</h3>
+<ul>
+<li>Not really scalable</li>
+<li>We may put logging in the wrong place</li>
+<li>Can lose context (if adding logs)</li>
+</ul>
+</div></section><section class="slide" data-pos="3-1-8">
+<span class="pos">3-1-8</span>
+<div class="slidecontent"><p><strong>Disclaimer</strong></p>
+<p>Logging is a powerful tool, when used correctly.</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/3</div>
+      <h3>Stage 2</h3>
+      <p>Open a port</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-2-1">
+<span class="pos">3-2-1</span>
+<div class="slidecontent"><h3 id="node-js-remote-debugger">Node.js Remote Debugger</h3>
+<ul>
+<li>Allows debugging of remote processes</li>
+<li>Connects via v8-inspector protocol<strong>*</strong></li>
+</ul>
+<p><strong> * Versions 7.7 and older use debugger protocol</strong></p>
+</div></section><section class="slide" data-pos="3-2-2">
+<span class="pos">3-2-2</span>
+<div class="slidecontent"><h3 id="configuring-to-run-inspection-mode">Configuring to run inspection mode</h3>
+<p><img style="max-width: 70%" src="resources/images/run-inspect-setup.png"></p>
+</div></section><section class="slide" data-pos="3-2-3">
+<span class="pos">3-2-3</span>
+<div class="slidecontent"><h3 id="configuring-chromium-debugger">Configuring chromium debugger</h3>
+<p><img style="max-width: 70%" src="resources/images/inspector-setup.png"></p>
+</div></section><section class="slide" data-pos="3-2-4">
+<span class="pos">3-2-4</span>
+<div class="slidecontent"><h3 id="demo">Demo</h3>
+<p><strong><em>&quot;Remote&quot;</em> debugging locally</strong></p>
+</div></section><section class="slide" data-pos="3-2-5">
+<span class="pos">3-2-5</span>
+<div class="slidecontent"><h3 id="wrapping-in-docker">Wrapping in docker</h3>
+<p><pre><code><span class="hljs-keyword">FROM</span> node:<span class="hljs-number">8</span>
+
+<span class="hljs-keyword">WORKDIR</span><span class="bash"> /work
+</span><span class="hljs-keyword">COPY</span><span class="bash"> ./ /work/
+</span><span class="hljs-comment">#RUN npm install</span>
+<span class="hljs-comment">#RUN npm run build</span>
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">8080</span>
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">9229</span>
+
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">"node"</span>, <span class="hljs-string">"--inspect=0.0.0.0:9229"</span>, <span class="hljs-string">"server-build.js"</span>]</span></code></pre></p>
+</div></section><section class="slide" data-pos="3-2-6">
+<span class="pos">3-2-6</span>
+<div class="slidecontent"><h3 id="running-our-container">Running our container</h3>
+<p><pre><code>$ docker run -d -p8080:8080 -p9229:9229 game:s2
+11e228cfbf32c68a20735bb4d719b956591b6e7bb77b78b212dff33f619191de
+</code></pre></p>
+</div></section><section class="slide" data-pos="3-2-7">
+<span class="pos">3-2-7</span>
+<div class="slidecontent"><h3 id="problems">Problems</h3>
+<ul>
+<li>Port is always open</li>
+<li>Container is in debug mode</li>
+<li>Run command is getting long</li>
+</ul>
+</div></section><section class="slide" data-pos="3-2-8">
+<span class="pos">3-2-8</span>
+<div class="slidecontent"><h3 id="solution">Solution</h3>
+<p><strong>Docker Compose</strong></p>
+</div></section><section class="slide" data-pos="3-2-9">
+<span class="pos">3-2-9</span>
+<div class="slidecontent"><p>docker-compose.yml
+<pre><code><span class="hljs-attr">version:</span> <span class="hljs-string">'2'</span>
+<span class="hljs-attr">services:</span>
+<span class="hljs-attr">    deployment:</span>
+<span class="hljs-attr">        build:</span> <span class="hljs-string">./</span>
+<span class="hljs-attr">        image:</span> <span class="hljs-string">game-deployment</span>
+<span class="hljs-attr">        ports:</span>
+<span class="hljs-bullet">            -</span> <span class="hljs-string">"8080:8080"</span>
+
+<span class="hljs-attr">    debug:</span>
+<span class="hljs-attr">        build:</span>
+<span class="hljs-attr">            context:</span> <span class="hljs-string">./</span>
+<span class="hljs-attr">            dockerfile:</span> <span class="hljs-string">Dockerfile.debug</span>
+<span class="hljs-attr">        image:</span> <span class="hljs-string">game-debug</span>
+<span class="hljs-attr">        ports:</span>
+<span class="hljs-bullet">            -</span> <span class="hljs-string">"8080:8080"</span>
+<span class="hljs-bullet">            -</span> <span class="hljs-string">"9229:9229"</span></code></pre></p>
+</div></section><section class="slide" data-pos="3-2-10">
+<span class="pos">3-2-10</span>
+<div class="slidecontent"><h3 id="using-docker-compose">Using docker compose</h3>
+<p><pre><code>$ docker-compose build debug
+$ docker-compose up -d debug
+$ docker-compose down
+</code></pre></p>
+</div></section><section class="slide" data-pos="3-2-11">
+<span class="pos">3-2-11</span>
+<div class="slidecontent"><h3 id="demo">Demo</h3>
+<p><strong>Running with docker-compose</strong></p>
+</div></section><section class="slide" data-pos="3-2-12">
+<span class="pos">3-2-12</span>
+<div class="slidecontent"><h3 id="pros">Pros</h3>
+<ul>
+<li>Can connect a debugger into Docker container</li>
+</ul>
+</div></section><section class="slide" data-pos="3-2-13">
+<span class="pos">3-2-13</span>
+<div class="slidecontent"><h3 id="cons">Cons</h3>
+<ul>
+<li>Security - debug port left open</li>
+<li>Lose context (if not using debug container)</li>
+<li>Have to maintain two different docker files</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/3</div>
+      <h3>Stage 3</h3>
+      <p>Docker networking</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-3-1">
+<span class="pos">3-3-1</span>
+<div class="slidecontent"><h3 id="changing-node-to-debug-mode">Changing node to debug mode</h3>
+<p><pre><code>$ node server-build.js
+Server running on port 8080
+</code></pre></p>
+<p><pre><code>$ ps -C node
+  PID TTY          TIME CMD
+ 7433 pts/15   00:00:00 node
+$ <span class="hljs-built_in">kill</span> -s USR1 7433
+</code></pre></p>
+<p>Result:
+<pre><code>$ node server-build.js
+  Server running on port 8080
+  Starting debugger agent.
+  Debugger listening on 127.0.0.1:5858
+</code></pre></p>
+</div></section><section class="slide" data-pos="3-3-2">
+<span class="pos">3-3-2</span>
+<div class="slidecontent"><h3 id="sending-a-signal-into-docker">Sending a signal into Docker</h3>
+<p><pre><code>$ docker run -d game:s0
+  c6985986393a2cee97bbb53de8a172176d4662edf9bd2472be61eaf656b2a2f7
+$ docker logs c6985
+  Server running on port 8080
+$ docker <span class="hljs-built_in">kill</span> -s SIGUSR1 c6985
+  c6985
+$ docker logs c6985
+  Server running on port 8080
+  Debugger listening on ws://127.0.0.1:9229/619d5499-4c9d...
+  For <span class="hljs-built_in">help</span> see https://nodejs.org/en/docs/inspector
+
+</code></pre></p>
+</div></section><section class="slide" data-pos="3-3-3">
+<span class="pos">3-3-3</span>
+<div class="slidecontent"><h3 id="demo">Demo</h3>
+<p><strong>Signaling our node app</strong></p>
+</div></section><section class="slide" data-pos="3-3-4">
+<span class="pos">3-3-4</span>
+<div class="slidecontent"><h3 id="the-situation">The situation</h3>
+<p><img style="max-width: 50%" src="resources/images/game-container-situation.png"></p>
+</div></section><section class="slide" data-pos="3-3-5">
+<span class="pos">3-3-5</span>
+<div class="slidecontent"><h3 id="problems">Problems</h3>
+<ul>
+<li>Container <strong>may</strong> be in an isolated network</li>
+<li>No ports are open</li>
+<li>Debugger is listening on 127.0.0.1</li>
+</ul>
+</div></section><section class="slide" data-pos="3-3-6">
+<span class="pos">3-3-6</span>
+<div class="slidecontent"><h3 id="our-goals">Our Goals</h3>
+<ul>
+<li>Connect to the container (even if isolated)</li>
+<li>Don&#39;t leave any ports open</li>
+<li>Pretend to be localhost</li>
+</ul>
+</div></section><section class="slide" data-pos="3-3-7">
+<span class="pos">3-3-7</span>
+<div class="slidecontent"><h3 id="the-plan">The plan</h3>
+<p><img style="max-width: 70%" src="resources/images/the-plan.png"></p>
+</div></section><section class="slide" data-pos="3-3-8">
+<span class="pos">3-3-8</span>
+<div class="slidecontent"><ol>
+<li>Send SIGUSR1 to switch to debug mode.</li>
+<li>Connect a &quot;sidecar&quot; container to the same network interface.</li>
+<li>Connect a forwarding container to the same network as &quot;sidecar&quot;.</li>
+<li>Connect to the forwarding container via our debugger.</li>
+</ol>
+</div></section><section class="slide" data-pos="3-3-9">
+<span class="pos">3-3-9</span>
+<div class="slidecontent"><h3 id="socat">Socat</h3>
+<blockquote>
+<p>Socat is a command line based utility that establishes two
+  bidirectional byte streams and transfers data between them.</p>
+</blockquote>
+</div></section><section class="slide" data-pos="3-3-10">
+<span class="pos">3-3-10</span>
+<div class="slidecontent"><h3 id="connecting-the-sidecar">Connecting the sidecar</h3>
+<p><pre><code>docker run -d --name socat-attach --network=container:<span class="hljs-variable">${TARGET_CONTAINER}</span> \
+  socat-image socat TCP-LISTEN:<span class="hljs-variable">${TEMP_PORT}</span>,fork TCP:127.0.0.1:9229
+</code></pre>
+<br></p>
+<ul>
+<li><code>${TARGET_CONTAINER}</code> is the container ID</li>
+<li><code>${TEMP_PORT}</code> is a port to connect sidecar to forwarding container</li>
+</ul>
+</div></section><section class="slide" data-pos="3-3-11">
+<span class="pos">3-3-11</span>
+<div class="slidecontent"><h3 id="connecting-the-forwarding-container">Connecting the forwarding container</h3>
+<p><pre><code>docker run -d -p 9229:9229 --name socat-fw socat-image socat \
+  TCP-LISTEN:9229,fork TCP:<span class="hljs-variable">${TARGET_IP}</span>:<span class="hljs-variable">${TEMP_PORT}</span>
+</code></pre>
+<br></p>
+<ul>
+<li><code>${TARGET_IP}</code> is the targets IP</li>
+<li><code>${TEMP_PORT}</code> is a port to connect sidecar to forwarding container</li>
+</ul>
+</div></section><section class="slide" data-pos="3-3-12">
+<span class="pos">3-3-12</span>
+<div class="slidecontent"><h3 id="finding-the-ip-address">Finding the IP address</h3>
+<pre><code>$ docker inspect ${TARGET_CONTAINER}
+#...
+"Networks": {
+                "bridge": {
+                    #...
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02",
+                    "DriverOpts": null
+                }
+            }
+</code></pre></div></section><section class="slide" data-pos="3-3-13">
+<span class="pos">3-3-13</span>
+<div class="slidecontent"><h3 id="demo">Demo</h3>
+<p><strong>Putting it all together!</strong></p>
+</div></section><section class="slide" data-pos="3-3-14">
+<span class="pos">3-3-14</span>
+<div class="slidecontent"><p>Pros:</p>
+<ul>
+<li>No Ports left open</li>
+<li>No context lost</li>
+<li>One docker file to maintain</li>
+</ul>
+</div></section><section class="slide" data-pos="3-3-15">
+<span class="pos">3-3-15</span>
+<div class="slidecontent"><p>Cons:</p>
+<ul>
+<li>Can&#39;t audit logs</li>
+<li>App is left in debug mode</li>
+</ul>
+</div></section><section class="slide" data-pos="3-3-16">
+<span class="pos">3-3-16</span>
+<div class="slidecontent"><h3 id="recommendations-">Recommendations:</h3>
+<ul>
+<li>Use logging to create audit logs</li>
+<li>Debug using Docker networking</li>
+<li>Restart/Kill containers after debugging</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION3--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(3-1);
+        } else if (code >= 49 && code <= 3+48) {
+          window.location.hash = "#/" + (code-48+1+0);
+        }
+        if (3 < 3) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(3+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="/reload/reload.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

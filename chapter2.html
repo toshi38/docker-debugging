@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>The problem</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/styles.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 2 of 3 </div>
+            <h1>The problem</h1>
+            
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/2">Our&nbsp;use&nbsp;case</a></li>
+<li><a href="#/3">Introducing&nbsp;the&nbsp;problem</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/2</div>
+      <h3>Our use case</h3>
+      <p>Guess a UUID</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-1-1">
+<span class="pos">2-1-1</span>
+<div class="slidecontent"><h3 id="a-simple-game-">A simple game*</h3>
+<p><img style="max-width: 70%" src="resources/images/guess-a-uuid.png"></p>
+<p><strong>* some cheating required...</strong></p>
+</div></section><section class="slide" data-pos="2-1-2">
+<span class="pos">2-1-2</span>
+<div class="slidecontent"><h3 id="generating-the-uuid-">Generating the uuid:</h3>
+<p><pre><code><span class="hljs-keyword">import</span> uuid <span class="hljs-keyword">from</span> <span class="hljs-string">'uuid/v4'</span>;
+
+<span class="hljs-keyword">let</span> uuidToGuess;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resetUuid</span>(<span class="hljs-params"></span>) </span>{
+  uuidToGuess = uuid();
+}
+
+resetUuid();</code></pre></p>
+</div></section><section class="slide" data-pos="2-1-3">
+<span class="pos">2-1-3</span>
+<div class="slidecontent"><h3 id="serving-a-simple-page-">Serving a simple page:</h3>
+<p><pre><code>app.get(<span class="hljs-string">'/'</span>, (req, res) =&gt; {
+  res.status(<span class="hljs-number">200</span>).send(<span class="hljs-string">'&lt;h1&gt;Guess a uuid!&lt;/h1&gt;&lt;br&gt;'</span> +
+    <span class="hljs-string">'Guess here: /guess/:uuid-to-guess&lt;br&gt;'</span> +
+    <span class="hljs-string">'Reset Game Here: /reset'</span>);
+});</code></pre></p>
+</div></section><section class="slide" data-pos="2-1-4">
+<span class="pos">2-1-4</span>
+<div class="slidecontent"><h3 id="the-routes-">The routes:</h3>
+<p><pre><code>app.get(<span class="hljs-string">'/guess/:uuid'</span>, (req, res) =&gt; {
+  res.status(<span class="hljs-number">200</span>).json({<span class="hljs-string">'correct'</span>: uuidToGuess === req.params.uuid});
+});
+
+app.get(<span class="hljs-string">'/reset'</span>, (req, res) =&gt; {
+  resetUuid();
+  res.status(<span class="hljs-number">200</span>).send(<span class="hljs-string">'uuid to guess is now reset!'</span>);
+});</code></pre></p>
+</div></section><section class="slide" data-pos="2-1-5">
+<span class="pos">2-1-5</span>
+<div class="slidecontent"><h3 id="the-docker-file-">The docker file:</h3>
+<p><pre><code><span class="hljs-keyword">FROM</span> node:<span class="hljs-number">8</span>
+
+<span class="hljs-keyword">WORKDIR</span><span class="bash"> /work
+</span><span class="hljs-keyword">COPY</span><span class="bash"> ./ /work/
+</span><span class="hljs-comment">#RUN npm install</span>
+<span class="hljs-comment">#RUN npm run build</span>
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">8080</span>
+
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">"node"</span>, <span class="hljs-string">"server-build.js"</span>]</span></code></pre></p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/2</div>
+      <h3>Introducing the problem</h3>
+      <p>Debugging outside of Docker</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-2-1">
+<span class="pos">2-2-1</span>
+<div class="slidecontent"><h3 id="debug-in-ide">Debug in IDE</h3>
+<ul>
+<li>Run app as per normal</li>
+<li>Set breakpoints</li>
+<li>Dockerize app</li>
+<li>Run Docker container</li>
+<li><strong>Cross fingers!</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="2-2-2">
+<span class="pos">2-2-2</span>
+<div class="slidecontent"><h3 id="configure-debugger-">Configure debugger:</h3>
+<p><img style="max-width: 70%" src="resources/images/debugger-setup.png"></p>
+</div></section><section class="slide" data-pos="2-2-3">
+<span class="pos">2-2-3</span>
+<div class="slidecontent"><h3 id="set-breakpoint-">Set breakpoint:</h3>
+<p><img style="max-width: 70%" src="resources/images/breakpoint.png"></p>
+</div></section><section class="slide" data-pos="2-2-4">
+<span class="pos">2-2-4</span>
+<div class="slidecontent"><h3 id="setup-source-maps-">Setup source maps:</h3>
+<p><pre><code>  <span class="hljs-string">"scripts"</span>: {
+    <span class="hljs-string">"test"</span>: <span class="hljs-string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>,
+    <span class="hljs-string">"serve"</span>: <span class="hljs-string">"babel-node server.js"</span>,
+    <span class="hljs-string">"build"</span>: <span class="hljs-string">"babel server.js -o server-build.js --source-maps inline"</span>
+  },
+</code></pre></p>
+</div></section><section class="slide" data-pos="2-2-5">
+<span class="pos">2-2-5</span>
+<div class="slidecontent"><h3 id="debugger-configured-with-source-maps">Debugger configured with source maps</h3>
+<p><img style="max-width: 70%" src="resources/images/debugger-setup-sourcemap.png"></p>
+</div></section><section class="slide" data-pos="2-2-6">
+<span class="pos">2-2-6</span>
+<div class="slidecontent"><h3 id="demo">Demo</h3>
+<p><strong>Trying the game</strong></p>
+</div></section><section class="slide" data-pos="2-2-7">
+<span class="pos">2-2-7</span>
+<div class="slidecontent"><h3 id="building-the-docker-image">Building the Docker image</h3>
+<p><pre><code>$ docker build . -t game:s0
+</code></pre></p>
+</div></section><section class="slide" data-pos="2-2-8">
+<span class="pos">2-2-8</span>
+<div class="slidecontent"><h3 id="running-the-docker-image">Running the Docker image</h3>
+<p><pre><code>$ docker run -p8080:8080 game:s0
+</code></pre></p>
+</div></section><section class="slide" data-pos="2-2-9">
+<span class="pos">2-2-9</span>
+<div class="slidecontent"><h3 id="running-detached">Running Detached</h3>
+<p><pre><code>$ docker run -d -p8080:8080 game:s0
+</code></pre></p>
+</div></section><section class="slide" data-pos="2-2-10">
+<span class="pos">2-2-10</span>
+<div class="slidecontent"><h3 id="demo">Demo</h3>
+<p><strong>Our isolated game</strong></p>
+</div></section><section class="slide" data-pos="2-2-11">
+<span class="pos">2-2-11</span>
+<div class="slidecontent"><p><strong>Currently we have no way to debug our game while running in docker.</strong></p>
+</div></section>
+</section>
+<!--ENDSECTION2--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(2-1);
+        } else if (code >= 49 && code <= 2+48) {
+          window.location.hash = "#/" + (code-48+1+0);
+        }
+        if (2 < 3) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(2+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="/reload/reload.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

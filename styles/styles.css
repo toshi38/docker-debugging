@@ -1,0 +1,16 @@
+img {
+  border-style: none !important;
+  background: none !important;
+}
+
+.smaller {
+  font-size: 0.4em !important;
+}
+
+.small {
+  font-size: 0.6em !important;
+}
+
+.medium {
+  font-size: 0.8em !important;
+}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>The 3 Stages of Docker Debugging</title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+        <link rel="stylesheet" href="mc2/styles/index.css" id="theme">
+        <link rel="stylesheet" href="mc2/font/roboto/font-roboto.css">
+
+        <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+        <!--[if lt IE 9]>
+        <script src="bower_components/reveal.js/lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <div class="detailedoverview"><div><h4><span>1.</span> Introduction</h4><ol><li>Who am I</li><li>Containerization</li><li>Docker</li></ol></div><div><h4><span>2.</span> The problem</h4><ol><li>Our use case</li><li>Introducing the problem</li></ol></div><div><h4><span>3.</span> The three stages</h4><ol><li>Stage 1</li><li>Stage 2</li><li>Stage 3</li></ol></div></div><div></div>
+        <div class="firstpage">
+            <div class="splash">
+                <h1>The 3 Stages of Docker Debugging</h1>
+                
+            </div>
+            <div class="slideindex"><div><div><a class="chapterlink" href="chapter1.html"><span>1. </span>Introduction</a><a class="chapterlink" href="chapter2.html"><span>2. </span>The&nbsp;problem</a><a class="chapterlink" href="chapter3.html"><span>3. </span>The&nbsp;three&nbsp;stages</a></div></div></div>
+        </div>
+        <img class="logo" src="mc2/images/edument_logo_white_trq.svg">
+        <script type="text/javascript">
+
+var activeLink;
+current = 0;
+
+function markLink(to){
+    if (activeLink){
+        activeLink.classList.remove("active");
+    }
+    current = parseInt(to);
+    activeLink = document.querySelectorAll(".chapterlink")[current];
+    activeLink.classList.add("active");
+}
+
+var nbrOfColumns = Math.ceil(3/5);
+
+window.addEventListener("keydown",function(e){
+  var code = e.which || e.keyCode;
+  if (code === 13 || code === 32){ // enter key, go to selected chapter
+    window.location = activeLink.href;
+  } else if (code === 40){ // arrow down
+    markLink(current === 3-1 ? 0 : current + 1);
+  } else if (code === 38){ // arrow up
+    markLink(current === 0 ? 3-1 : current - 1);
+  } else if (code === 39 && 3 > 7) { // arrow right
+      var trgt = current + 5;
+      if ((trgt+1)/5 > nbrOfColumns){
+        trgt = trgt % (nbrOfColumns*5); // wrap to first column
+      }
+      else if (trgt >= 3) {
+        trgt = 3-1; // cap to last item in last column
+      }
+      markLink(trgt);
+  } else if (code === 37 && 3 > 7) { // arrow left
+    var trgt = (current + (nbrOfColumns*5) - 5) % (nbrOfColumns*5);
+    if (trgt >= 3) {
+      trgt = 3-1; // cap to last item in last column
+    }
+    markLink(trgt);
+  } else if (code >= 49 && code <= 3+48){ // digit 1-9, go to that chapter
+    window.location = document.querySelectorAll(".chapterlink")[code-49].href;
+  } else if (code === 73) { // Letter I
+    document.body.classList.toggle("showoverview");
+  }
+});
+
+markLink( (window.location.href.match(/\?from=(.)*$/)||[0,0])[1] );
+
+        </script>
+        <script type="text/javascript" src="/reload/reload.js"></script>
+    </body>
+</html>
