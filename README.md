@@ -23,6 +23,6 @@ The first stage of Docker debugging that most developers turn to is the docker l
 ## Stage 2: Open a Port
 Many clever developers think to themselves: “Node.js supports remote debugging/inspection, why don’t I use that?”.  They punch a hole in the isolation, leave the required port open and connect the remote debugger.  Perhaps they create a couple of different “profiles” with Docker Compose or a script that allows them to run their containerized app in both debug or non debug mode.
 
-##Stage 3: Docker Networking
+## Stage 3: Docker Networking
 Stage 2 solves many of our problems in development, unfortunately we (probably) don’t want to leave ports open or run in debug mode in production.  In addition, if we need to restart our app in debug mode we will lose the current context.  This prevents us from debugging tricky bugs that maybe only show up now and then.  In Stage 3 I will present a method of connecting to an existing running Node.js app without losing the current context.  In order to do this we’ll leverage the Docker networking stack.
 
