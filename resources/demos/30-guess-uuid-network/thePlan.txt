@@ -4,7 +4,7 @@ node --inspect server-build.js
 # From another window
 ps -C node
 
-kill -s USR1
+kill -s SIGUSR1
 
 #Go back Show now in inspection mode.
 
