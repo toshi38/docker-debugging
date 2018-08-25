@@ -9,7 +9,7 @@ kill -s USR1
 #Go back Show now in inspection mode.
 
 #Run original docker container
-docker run -p game:s0
+docker run -p 8080:8080 game:s0
 
 #run script
 docker ps
