@@ -3,7 +3,7 @@
 #Script inspired by https://codefresh.io/blog/debug_node_in_docker/
 
 if [ $# -lt 1 ]; then
-  printf "Please pass a container name as an argument:"
+  printf "Please pass a container name as an argument:\n"
   docker ps
   exit 1
 fi;
